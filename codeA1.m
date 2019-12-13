@@ -48,7 +48,7 @@ histogram(categories);
 nrOfDependants = str2double(T.NrOfDependants);
 histogram(nrOfDependants);
 
-% Convert status to double so we are able to create histogram
+% Convert status to double so we are able to create histogram %
 loanStatus = zeros(length(T.Status), 1);
 for i = 1:length(T.Status)
 	if string(T.Status(i)) == 'Repaid'
