@@ -1,0 +1,18 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Discord notification
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        DISCORD_USERNAME: ${{ secrets.DISCORD_USERNAME }} 
+      uses: Ilshidur/action-discord@master
+      with:
+        args: 'A new version of {{ EVENT_PAYLOAD.repository.full_name }} has been pushed to remote repository by {{ EVENT_PAYLOAD.pusher.name }}.'
