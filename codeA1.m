@@ -1,7 +1,7 @@
 % destination path for the file
 rootFilePath = '/Users/donvanderkrogt/matlab/fintech/';
 
-filename = strcat(rootFilePath, 'LoanData_.csv');
+filename = strcat(rootFilePath, 'cleanData.csv');
 delimiterIn = ',';
 headerlinesIn = 1;
 T = readtable(filename);
