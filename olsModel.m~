@@ -50,13 +50,7 @@ xlabel('Actual Monthly Yield')
 ylabel('Predicted Monthly Yield')
 hold off
 
-% regular linear regression model with only one predictor
-mdl = fitlm(XTest(:, 2), yTest);
-y_predictions = predict(mdl, XTest(:, 2));
-
-hold on
-scatter(yTest, y_predictions)
-plot(yTest,yTest)
-xlabel('Actual Monthly Yield')
-ylabel('Predicted Monthly Yield')
-hold off
+% regular linear regression model
+mdl = fitlm(T.interest, y);
+y_predictions = predict(mdl, T.interest);
+scatter(y, y_predictions)
