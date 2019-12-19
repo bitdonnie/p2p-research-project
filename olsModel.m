@@ -1,14 +1,14 @@
 % destination path for the file
 rootFilePath = '/Users/donvanderkrogt/matlab/fintech/';
 
-filename = strcat(rootFilePath, 'cleanDatacsv.csv');
+filename = strcat(rootFilePath, 'LoanDataWinsorized.csv');
 delimiterIn = ',';
 headerlinesIn = 1;
 T = readtable(filename);
-y = T.m_yield;
+y = T.m_yield_1;
 
 % remove variables from table for Binominal Logistic Regression
-T = removevars(T, {'amount', 'default', 'm_yield', 'm_reportasofeod', 'interestandpenaltypaymentsmade', 'principalpaymentsmade'});
+T = removevars(T, {'default', 'm_yield', 'm_yield_1'});
 
 % convert table to matrix
 X = table2array(T);
@@ -38,16 +38,16 @@ coef0 = FitInfo.Intercept(idxLamdaMinDeviance);
 
 sparseModelPredictors = FitInfo.PredictorNames(B(:,idxLamdaMinDeviance)~=0)
 
-lassoPlot(B, FitInfo, 'PlotType', 'CV');
-lengend('show')
+% lassoPlot(B, FitInfo, 'PlotType', 'CV');
+% lengend('show')
 
 yhat = XTest * coef + coef0;
 
 hold on
 scatter(yTest,yhat)
 plot(yTest,yTest)
-xlabel('Actual Monthly Yield')
-ylabel('Predicted Monthly Yield')
+xlabel('Yearly Yield')
+ylabel('Predicted Yearly Yield')
 hold off
 
 % regular linear regression model with only one predictor
