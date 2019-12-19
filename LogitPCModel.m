@@ -1,3 +1,5 @@
+import export_fig.*
+
 % destination path for the file
 rootFilePath = '/Users/donvanderkrogt/matlab/fintech/';
 
@@ -32,25 +34,24 @@ yhatBinom = (yhat>=0.5);
 yTest = (yTest==1);
 
 c = confusionchart(yTest,yhatBinom);
+export_fig(strcat(rootFilePath, 'Figures/', 'ConfusionMatrix_PCA.png'))
 
 accuracy = (c.NormalizedValues(1, 1) + c.NormalizedValues(2, 2)) / (c.NormalizedValues(1, 1) + c.NormalizedValues(1, 2) + c.NormalizedValues(2, 1) + c.NormalizedValues(2, 2));
 sensitivity = c.NormalizedValues(2, 2) / (c.NormalizedValues(2, 1) + c.NormalizedValues(2, 2));
 specifity = c.NormalizedValues(1, 1) / (c.NormalizedValues(1, 1) + c.NormalizedValues(2, 1));
 
-% show used variabels
-for i = 1:length(coef)
-    if (coef(i) ~= 0)
-        predictiveVars(i) = T(
-    end
-        
-     
-end
-
 % Compute Area under the curve
 [X, Y, T, AUC] = perfcurve(yTest, yhat, 1);
+hold on
 plot(X,Y)
+plot([0, 1], [0, 1])
 xlabel('False positive rate') 
 ylabel('True positive rate')
-title('ROC for Classification by Logistic Regression')
+title('AUC for PCA by Logistic Regression')
+hold off
+export_fig(strcat(rootFilePath, 'Figures/', 'AUC_PCA.png'))
 
-
+% write logit model to xlxs 
+mdl = fitglm(X, y, 'linear', ...
+      'distr', 'binomial', 'VarNames', cat(1, T.Properties.VariableNames{:}, {'default'}));
+writetable(mdl.Coefficients, strcat(rootFilePath, 'Tables/PCALogitTable.xlsx'));

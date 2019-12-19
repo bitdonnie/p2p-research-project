@@ -1,14 +1,14 @@
 % destination path for the file
 rootFilePath = '/Users/donvanderkrogt/matlab/fintech/';
 
-filename = strcat(rootFilePath, 'LoanDataWinsorized.csv');
+filename = strcat(rootFilePath, 'latestData.csv');
 delimiterIn = ',';
 headerlinesIn = 1;
 T = readtable(filename);
-y = T.m_yield_1;
+y = T.m_yield;
 
 % remove variables from table for Binominal Logistic Regression
-T = removevars(T, {'default', 'm_yield', 'm_yield_1'});
+T = removevars(T, {'default', 'm_yield'});
 
 % convert table to matrix
 X = table2array(T);
@@ -49,6 +49,7 @@ plot(yTest,yTest)
 xlabel('Yearly Yield')
 ylabel('Predicted Yearly Yield')
 hold off
+export_fig(strcat(rootFilePath, 'Figures/', 'LASSOPredictions_PCA.png'))
 
 % regular linear regression model with only one predictor
 mdl = fitlm(XTest(:, 2), yTest);
@@ -60,3 +61,7 @@ plot(yTest,yTest)
 xlabel('Actual Monthly Yield')
 ylabel('Predicted Monthly Yield')
 hold off
+
+% write LASSO models to xlxs
+predictorVars = table(transpose(FitInfo.PredictorNames(B(:,idxLamdaMinDeviance)~=0)), nonzeros(B(:,idxLamdaMinDeviance)));
+writetable(predictorVars, strcat(rootFilePath, 'Tables/LASSOGLRTable.xlsx'));
